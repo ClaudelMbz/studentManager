@@ -36,9 +36,6 @@ jobs:
 
     - name: 🔧 Setup Pages
       uses: actions/configure-pages@v4
-      with:
-        # Active automatiquement Pages si pas encore fait
-        enablement: true
 
     - name: 📦 Upload artifact
       uses: actions/upload-pages-artifact@v3
