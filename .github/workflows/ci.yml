@@ -1,0 +1,109 @@
+name: 🔍 CI - Quality Checks
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  quality-checks:
+    name: 🧪 Quality Checks
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+
+    - name: 🔍 HTML Validation
+      uses: Cyb3r-Jak3/html5validator-action@v7.2.0
+      with:
+        root: ./
+        css: true
+        
+    - name: 📊 File Analysis
+      run: |
+        echo "📁 Structure du projet:"
+        find . -type f -name "*.html" -o -name "*.css" -o -name "*.js" -o -name "*.md" | head -20
+        
+        echo ""
+        echo "📈 Statistiques:"
+        echo "HTML files: $(find . -name "*.html" | wc -l)"
+        echo "CSS lines: $(grep -c . *.html | grep -o '[0-9]*' | head -1)"
+        echo "JS functions: $(grep -c 'function' *.html)"
+        
+        echo ""
+        echo "🎯 Compétences dans le CSV:"
+        if [ -f "calc.csv" ]; then
+          echo "Total: $(tail -n +2 calc.csv | wc -l) compétences"
+          echo "Domaines: $(tail -n +2 calc.csv | cut -d',' -f2 | sort | uniq | wc -l)"
+        fi
+
+    - name: 🔒 Security Check
+      run: |
+        echo "🔍 Vérification de sécurité basique..."
+        
+        # Vérifier qu'il n'y a pas de secrets exposés
+        if grep -r "password\|secret\|key\|token" --include="*.html" --include="*.js" .; then
+          echo "⚠️ Attention: Possibles secrets détectés"
+          exit 1
+        else
+          echo "✅ Aucun secret détecté"
+        fi
+        
+        # Vérifier les bonnes pratiques HTML
+        if grep -q "<!DOCTYPE html>" *.html; then
+          echo "✅ DOCTYPE HTML5 présent"
+        else
+          echo "⚠️ DOCTYPE HTML5 manquant"
+        fi
+
+    - name: 📱 Responsive Check
+      run: |
+        echo "📱 Vérification du responsive design..."
+        
+        if grep -q "@media" *.html; then
+          echo "✅ Media queries détectées"
+        else
+          echo "⚠️ Aucune media query trouvée"
+        fi
+        
+        if grep -q "viewport" *.html; then
+          echo "✅ Meta viewport présent"
+        else
+          echo "⚠️ Meta viewport manquant"
+        fi
+
+    - name: ♿ Accessibility Check
+      run: |
+        echo "♿ Vérification de l'accessibilité..."
+        
+        # Vérifier les attributs alt sur les images
+        if grep -q 'alt=' *.html; then
+          echo "✅ Attributs alt détectés"
+        fi
+        
+        # Vérifier les labels
+        if grep -q 'title=' *.html; then
+          echo "✅ Attributs title présents"
+        fi
+        
+        echo "✅ Vérifications d'accessibilité terminées"
+
+    - name: 🎨 Performance Hints
+      run: |
+        echo "🎨 Conseils de performance..."
+        
+        # Vérifier les fonts externes
+        font_count=$(grep -c "fonts.googleapis.com" *.html || echo "0")
+        echo "📝 Fonts externes: $font_count"
+        
+        # Vérifier la taille des fichiers
+        html_size=$(wc -c < index.html)
+        echo "📏 Taille index.html: $html_size bytes"
+        
+        if [ $html_size -gt 100000 ]; then
+          echo "⚠️ Fichier HTML volumineux (>100KB)"
+        else
+          echo "✅ Taille HTML optimale"
+        fi
