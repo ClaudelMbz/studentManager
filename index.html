@@ -126,6 +126,119 @@
             font-weight: bold;
         }
 
+        /* Section de progression */
+        .progress-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .light-mode .progress-section {
+            border-top-color: rgba(16, 185, 129, 0.15);
+        }
+
+        .progress-chart {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .donut-chart {
+            transform: rotate(-90deg);
+        }
+
+        .progress-text {
+            position: absolute;
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .progress-percentage {
+            font-size: 1.8em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .progress-label {
+            font-size: 0.8em;
+            color: #cbd5e1;
+            margin-top: 2px;
+        }
+
+        .light-mode .progress-label {
+            color: #64748b;
+        }
+
+        .progress-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .progress-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 8px;
+        }
+
+        .light-mode .progress-title {
+            color: #1e293b;
+        }
+
+        .progress-description {
+            font-size: 0.9em;
+            color: #cbd5e1;
+            margin-bottom: 12px;
+        }
+
+        .light-mode .progress-description {
+            color: #64748b;
+        }
+
+        .progress-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .breakdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+            color: #cbd5e1;
+        }
+
+        .light-mode .breakdown-item {
+            color: #64748b;
+        }
+
+        .breakdown-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .progress-section {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
         .filters {
             padding: 24px;
             background: rgba(51, 65, 85, 0.3);
@@ -448,6 +561,40 @@
                     <div>🟢 Vert</div>
                 </div>
             </div>
+            
+            <!-- Section de progression -->
+            <div class="progress-section">
+                <div class="progress-chart">
+                    <svg class="donut-chart" width="120" height="120" viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(148, 163, 184, 0.2)" stroke-width="8"/>
+                        <circle id="progress-circle" cx="60" cy="60" r="50" fill="none" stroke="#10b981" stroke-width="8" 
+                                stroke-dasharray="0 314" stroke-dashoffset="0" transform="rotate(-90 60 60)" 
+                                style="transition: stroke-dasharray 0.5s ease"/>
+                    </svg>
+                    <div class="progress-text">
+                        <div class="progress-percentage" id="progress-percentage">0%</div>
+                        <div class="progress-label">Validé</div>
+                    </div>
+                </div>
+                <div class="progress-details">
+                    <div class="progress-info">
+                        <div class="progress-title">📊 Évaluation</div>
+                        <div class="progress-description">
+                            <span id="evaluated-count">0</span> / <span id="evaluable-count">0</span> compétences évaluées
+                        </div>
+                        <div class="progress-breakdown">
+                            <div class="breakdown-item">
+                                <span class="breakdown-dot" style="background: #10b981;"></span>
+                                <span id="success-rate">0%</span> de réussite
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-dot" style="background: #ef4444;"></span>
+                                <span id="failure-rate">0%</span> d'échec
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="filters">
@@ -587,17 +734,60 @@
             }
         }
 
-        // Fonction pour mettre à jour les statistiques
+        // Fonction pour mettre à jour les statistiques et la progression
         function updateStats() {
             const total = competencesData.length;
             const rouge = Object.values(validationStates).filter(state => state === 'rouge').length;
             const jaune = Object.values(validationStates).filter(state => state === 'jaune').length;
             const vert = Object.values(validationStates).filter(state => state === 'vert').length;
 
+            // Mise à jour des compteurs
             document.getElementById('total-count').textContent = total;
             document.getElementById('rouge-count').textContent = rouge;
             document.getElementById('jaune-count').textContent = jaune;
             document.getElementById('vert-count').textContent = vert;
+
+            // Calcul des pourcentages (jaune = en attente, pas compté)
+            const evaluated = rouge + vert; // Compétences évaluées (rouge ou vert)
+            const evaluable = total; // Total des compétences
+            
+            // Pourcentage de réussite : vert / (rouge + vert) * 100
+            const successRate = evaluated > 0 ? Math.round((vert / evaluated) * 100) : 0;
+            const failureRate = evaluated > 0 ? Math.round((rouge / evaluated) * 100) : 0;
+            
+            // Pourcentage global de validation (vert / total)
+            const globalProgress = Math.round((vert / total) * 100);
+
+            // Mise à jour de l'affichage
+            document.getElementById('progress-percentage').textContent = globalProgress + '%';
+            document.getElementById('evaluated-count').textContent = evaluated;
+            document.getElementById('evaluable-count').textContent = evaluable;
+            document.getElementById('success-rate').textContent = successRate + '%';
+            document.getElementById('failure-rate').textContent = failureRate + '%';
+
+            // Mise à jour du diagramme circulaire
+            updateProgressChart(globalProgress);
+        }
+
+        // Fonction pour mettre à jour le diagramme circulaire
+        function updateProgressChart(percentage) {
+            const circle = document.getElementById('progress-circle');
+            const circumference = 2 * Math.PI * 50; // rayon = 50
+            const progress = (percentage / 100) * circumference;
+            
+            // Animation du cercle de progression
+            circle.style.strokeDasharray = `${progress} ${circumference}`;
+            
+            // Changement de couleur selon le pourcentage
+            if (percentage >= 80) {
+                circle.style.stroke = '#10b981'; // Vert
+            } else if (percentage >= 50) {
+                circle.style.stroke = '#fbbf24'; // Jaune
+            } else if (percentage >= 25) {
+                circle.style.stroke = '#f97316'; // Orange
+            } else {
+                circle.style.stroke = '#ef4444'; // Rouge
+            }
         }
 
         // Fonction pour changer l'état de validation
