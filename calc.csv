@@ -1,0 +1,37 @@
+AA Code,Domain,Title,Target
+AA-MIA-C03-3-03,MIA,Secure and deploy a Client/server network infrastructure,P_B3_S
+AA-MME-C01-1-10,MME,Obtain basic skills in building structure,P_B3_S
+AA-MME-C01-1-14,MME,Define Euler buckling,P_B3_S
+AA-MME-C02-1-06,MME,"Know the key concepts of tensegrity structures to interact with specialists and non-specialists in the field, including t",P_B3_S
+AA-MME-C03-1-05,MME,Model the critical areas of a structure,P_B3_S
+AA-MME-C03-1-07,MME,Build simple small and real scale tensegrity structures,P_B3_S
+AA-MME-C03-1-09,MME,Test structural behavior of simple small and real scale tensegrity structures explaining the main structural response f,P_B3_S
+AA-MME-C03-2-11,MME,Explain and describe the process of materials fabrication,P_B3_S
+AA-MME-C04-2-03,MME,Interpreting elements from a numerical simulation,P_B3_S
+AA-MME-C04-2-05,MME,Analyze simple tensegrity structure using finite element simulations,P_B3_S
+AA-PROJET-C02-1-04,PROJ,Have a global and synthetic vision of a project,P_B3_S
+AA-PROJET-C07-1-03,PROJ,To master the elements of a project budget,P_B3_S
+AA-EEE-C02-1-03,EEE,Analyse constraints and interactions in technical systems (from specifications to design and implementation),P_B3_S
+AA-EEE-C06-5-01,EEE,Apply the safety rules relating to an electrical environment,P_B3_S
+AA-ESE-C01-1-08,ESE,Acquire and use theoretical and experimental in building heat transfer,P_B3_S
+AA-ESE-C02-1-03,ESE,Analyze the energy needed for a building,P_B3_S
+AA-ESE-C03-1-05,ESE,"Caracterise a problem and solve it by using the three modes (conduction, convection, radiation)",P_B3_S
+AA-ESE-C04-2-01,ESE,Use and understand a calculation software,P_B3_S
+AA-ESE-C09-1-03,ESE,Use theoretical and experimental knowledge of LCA in the context of the construction and operation of a building,P_B3_S
+AA-ESE-C09-1-04,ESE,Design a sustainable and ecological house (taking into account the LCA),P_B3_S
+AA-HUM-C01-2-01,HUM,Be familiar with the main concepts in geopolitics and ecology,P_B3_S
+AA-HUM-C05-2-01,HUM,Be able to find relevant information on a subject and guarantee its academic quality,P_B3_S
+AA-HUM-C05-2-02,HUM,"Present knowledge accurately, taking into account the complexity of points of view",P_B3_S
+AA-HUM-C06-10-01,HUM,"The ability to identify and analyse multiple, well-documented sources in depth",P_B3_S
+AA-HUM-C06-2-02,HUM,Know how to research information to produce a written or oral presentation,P_B3_S
+AA-HUM-C06-8-01,HUM,Know the editorial standards,P_B3_S
+AA-HUM-C06-8-02,HUM,"Search for and find information, being able to select sources critically",P_B3_S
+AA-HUM-C06-9-01,HUM,Extract relevant data from a technical document in your native language,P_B3_S
+AA-HUM-C06-9-02,HUM,Extract relevant data from a technical document in English,P_B3_S
+AA-HUM-C09-6-01,HUM,Master the main geopolitical concepts and relate them to contemporary issues,P_B3_S
+AA-HUM-C10-8-02,HUM,"Stepping outside one's frame of reference and prejudices to understand the diversity of points of view, so as not to offend others",P_B3_S
+AA-HUM-C13-2-03,HUM,Take a constructive personal position at stake in a group,P_B3_S
+AA-MGO-C07-1-05,MGO,Decipher how organizations work through organizational sociology,P_B3_S
+AA-MGO-C10-1-01,MGO,Explain the role of the manager/leader in an organisation,P_B3_S
+AA-MIA-C01-4-01,MIA,Acquire basic notions about the infrastructure and security of connected objects,P_B3_S
+AA-MIA-C03-1-06,MIA,Describe the architecture of connected objects,P_B3_S

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation des Compétences</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #e2e8f0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+            color: #e2e8f0;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .filters {
+            padding: 24px;
+            background: rgba(51, 65, 85, 0.3);
+            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+            backdrop-filter: blur(8px);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group label {
+            font-weight: 500;
+            color: #cbd5e1;
+            font-size: 0.9em;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 10px 14px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            font-size: 14px;
+            color: #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: rgba(16, 185, 129, 0.6);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .filter-group select option {
+            background: #1e293b;
+            color: #e2e8f0;
+        }
+
+        .competences-grid {
+            padding: 24px;
+            background: rgba(15, 23, 42, 0.3);
+        }
+
+        .competence-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            padding: 14px 18px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .competence-card:hover {
+            transform: scale(1.02);
+            border-color: rgba(16, 185, 129, 0.4);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            background: rgba(30, 41, 59, 0.7);
+        }
+
+        .competence-code {
+            font-weight: 600;
+            font-size: 0.9em;
+            color: #10b981;
+            min-width: 140px;
+            flex-shrink: 0;
+            font-family: 'Inter', monospace;
+        }
+
+        .competence-domain {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(6, 182, 212, 0.2) 100%);
+            color: #06b6d4;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            min-width: 50px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .competence-title {
+            color: #cbd5e1;
+            line-height: 1.4;
+            font-size: 0.8em;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .validation-buttons {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .validation-btn {
+            width: 34px;
+            height: 34px;
+            border: 2px solid rgba(148, 163, 184, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(4px);
+            font-size: 0.8em;
+        }
+
+        .validation-btn:hover {
+            transform: scale(1.15);
+            border-color: rgba(148, 163, 184, 0.6);
+        }
+
+        .btn-rouge {
+            border-color: rgba(148, 163, 184, 0.3);
+        }
+
+        .btn-rouge:hover {
+            border-color: rgba(239, 68, 68, 0.6);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-rouge.btn-active {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            border-color: #ef4444;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-jaune {
+            border-color: rgba(148, 163, 184, 0.3);
+        }
+
+        .btn-jaune:hover {
+            border-color: rgba(251, 191, 36, 0.6);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+        }
+
+        .btn-jaune.btn-active {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #1f2937;
+            border-color: #fbbf24;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-vert {
+            border-color: rgba(148, 163, 184, 0.3);
+        }
+
+        .btn-vert:hover {
+            border-color: rgba(16, 185, 129, 0.6);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-vert.btn-active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border-color: #10b981;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-active {
+            transform: scale(1.15);
+        }
+
+        .domain-MIA {
+            border-left: 4px solid #06b6d4;
+        }
+
+        .domain-MME {
+            border-left: 4px solid #10b981;
+        }
+
+        .domain-PROJ {
+            border-left: 4px solid #fbbf24;
+        }
+
+        .domain-EEE {
+            border-left: 4px solid #ef4444;
+        }
+
+        .domain-ESE {
+            border-left: 4px solid #8b5cf6;
+        }
+
+        .domain-HUM {
+            border-left: 4px solid #f97316;
+        }
+
+        .domain-MGO {
+            border-left: 4px solid #14b8a6;
+        }
+
+        @media (max-width: 768px) {
+            .competence-card {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .competence-title {
+                white-space: normal;
+                overflow: visible;
+                text-overflow: unset;
+            }
+
+            .validation-buttons {
+                align-self: flex-start;
+            }
+
+            .filter-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Validation des Compétences</h1>
+            <p>Système de validation interactif des acquis d'apprentissage</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="total-count">0</div>
+                    <div>Total</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="rouge-count">0</div>
+                    <div>🔴 Rouge</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="jaune-count">0</div>
+                    <div>🟡 Jaune</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="vert-count">0</div>
+                    <div>🟢 Vert</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label>Filtrer par domaine:</label>
+                <select id="domain-filter">
+                    <option value="">Tous les domaines</option>
+                </select>
+
+                <label>Filtrer par validation:</label>
+                <select id="validation-filter">
+                    <option value="">Toutes les validations</option>
+                    <option value="rouge">🔴 Rouge</option>
+                    <option value="jaune">🟡 Jaune</option>
+                    <option value="vert">🟢 Vert</option>
+                </select>
+
+                <label>Rechercher:</label>
+                <input type="text" id="search-input" placeholder="Code ou titre...">
+            </div>
+        </div>
+
+        <div class="competences-grid" id="competences-container">
+            <!-- Les compétences seront générées ici -->
+        </div>
+    </div>
+
+    <script>
+        // Données des compétences (remplacées par les vraies données du CSV)
+        const competencesData = [
+            { code: "AA-MIA-C03-3-03", domain: "MIA", title: "Secure and deploy a Client/server network infrastructure" },
+            { code: "AA-MME-C01-1-10", domain: "MME", title: "Obtain basic skills in building structure" },
+            { code: "AA-MME-C01-1-14", domain: "MME", title: "Define Euler buckling" },
+            { code: "AA-MME-C02-1-06", domain: "MME", title: "Know the key concepts of tensegrity structures to interact with specialists and non-specialists in the field, including t" },
+            { code: "AA-MME-C03-1-05", domain: "MME", title: "Model the critical areas of a structure" },
+            { code: "AA-MME-C03-1-07", domain: "MME", title: "Build simple small and real scale tensegrity structures" },
+            { code: "AA-MME-C03-1-09", domain: "MME", title: "Test structural behavior of simple small and real scale tensegrity structures explaining the main structural response f" },
+            { code: "AA-MME-C03-2-11", domain: "MME", title: "Explain and describe the process of materials fabrication" },
+            { code: "AA-MME-C04-2-03", domain: "MME", title: "Interpreting elements from a numerical simulation" },
+            { code: "AA-MME-C04-2-05", domain: "MME", title: "Analyze simple tensegrity structure using finite element simulations" },
+            { code: "AA-PROJET-C02-1-04", domain: "PROJ", title: "Have a global and synthetic vision of a project" },
+            { code: "AA-PROJET-C07-1-03", domain: "PROJ", title: "To master the elements of a project budget" },
+            { code: "AA-EEE-C02-1-03", domain: "EEE", title: "Analyse constraints and interactions in technical systems (from specifications to design and implementation)" },
+            { code: "AA-EEE-C06-5-01", domain: "EEE", title: "Apply the safety rules relating to an electrical environment" },
+            { code: "AA-ESE-C01-1-08", domain: "ESE", title: "Acquire and use theoretical and experimental in building heat transfer" },
+            { code: "AA-ESE-C02-1-03", domain: "ESE", title: "Analyze the energy needed for a building" },
+            { code: "AA-ESE-C03-1-05", domain: "ESE", title: "Caracterise a problem and solve it by using the three modes (conduction, convection, radiation)" },
+            { code: "AA-ESE-C04-2-01", domain: "ESE", title: "Use and understand a calculation software" },
+            { code: "AA-ESE-C09-1-03", domain: "ESE", title: "Use theoretical and experimental knowledge of LCA in the context of the construction and operation of a building" },
+            { code: "AA-ESE-C09-1-04", domain: "ESE", title: "Design a sustainable and ecological house (taking into account the LCA)" },
+            { code: "AA-HUM-C01-2-01", domain: "HUM", title: "Be familiar with the main concepts in geopolitics and ecology" },
+            { code: "AA-HUM-C05-2-01", domain: "HUM", title: "Be able to find relevant information on a subject and guarantee its academic quality" },
+            { code: "AA-HUM-C05-2-02", domain: "HUM", title: "Present knowledge accurately, taking into account the complexity of points of view" },
+            { code: "AA-HUM-C06-10-01", domain: "HUM", title: "The ability to identify and analyse multiple, well-documented sources in depth" },
+            { code: "AA-HUM-C06-2-02", domain: "HUM", title: "Know how to research information to produce a written or oral presentation" },
+            { code: "AA-HUM-C06-8-01", domain: "HUM", title: "Know the editorial standards" },
+            { code: "AA-HUM-C06-8-02", domain: "HUM", title: "Search for and find information, being able to select sources critically" },
+            { code: "AA-HUM-C06-9-01", domain: "HUM", title: "Extract relevant data from a technical document in your native language" },
+            { code: "AA-HUM-C06-9-02", domain: "HUM", title: "Extract relevant data from a technical document in English" },
+            { code: "AA-HUM-C09-6-01", domain: "HUM", title: "Master the main geopolitical concepts and relate them to contemporary issues" },
+            { code: "AA-HUM-C10-8-02", domain: "HUM", title: "Stepping outside one's frame of reference and prejudices to understand the diversity of points of view, so as not to offend others" },
+            { code: "AA-HUM-C13-2-03", domain: "HUM", title: "Take a constructive personal position at stake in a group" },
+            { code: "AA-MGO-C07-1-05", domain: "MGO", title: "Decipher how organizations work through organizational sociology" },
+            { code: "AA-MGO-C10-1-01", domain: "MGO", title: "Explain the role of the manager/leader in an organisation" },
+            { code: "AA-MIA-C01-4-01", domain: "MIA", title: "Acquire basic notions about the infrastructure and security of connected objects" },
+            { code: "AA-MIA-C03-1-06", domain: "MIA", title: "Describe the architecture of connected objects" }
+        ];
+
+        // État des validations (par défaut tout en jaune)
+        let validationStates = {};
+
+        // Initialiser toutes les compétences en jaune
+        competencesData.forEach(comp => {
+            validationStates[comp.code] = 'jaune';
+        });
+
+        // Fonction pour mettre à jour les statistiques
+        function updateStats() {
+            const total = competencesData.length;
+            const rouge = Object.values(validationStates).filter(state => state === 'rouge').length;
+            const jaune = Object.values(validationStates).filter(state => state === 'jaune').length;
+            const vert = Object.values(validationStates).filter(state => state === 'vert').length;
+
+            document.getElementById('total-count').textContent = total;
+            document.getElementById('rouge-count').textContent = rouge;
+            document.getElementById('jaune-count').textContent = jaune;
+            document.getElementById('vert-count').textContent = vert;
+        }
+
+        // Fonction pour changer l'état de validation
+        function changeValidation(code, newState) {
+            validationStates[code] = newState;
+            updateStats();
+
+            // Mettre à jour l'affichage des boutons
+            const card = document.querySelector(`[data-code="${code}"]`);
+            const buttons = card.querySelectorAll('.validation-btn');
+            buttons.forEach(btn => btn.classList.remove('btn-active'));
+
+            const activeButton = card.querySelector(`.btn-${newState}`);
+            if (activeButton) {
+                activeButton.classList.add('btn-active');
+            }
+        }
+
+        // Fonction pour créer une carte de compétence
+        function createCompetenceCard(competence) {
+            const validationState = validationStates[competence.code];
+
+            return `
+                <div class="competence-card domain-${competence.domain}" data-code="${competence.code}" data-domain="${competence.domain}" data-validation="${validationState}">
+                    <div class="competence-code">${competence.code}</div>
+                    <div class="competence-domain">${competence.domain}</div>
+                    <div class="competence-title" title="${competence.title}">${competence.title}</div>
+                    <div class="validation-buttons">
+                        <button class="validation-btn btn-rouge ${validationState === 'rouge' ? 'btn-active' : ''}" 
+                                onclick="changeValidation('${competence.code}', 'rouge')" title="Non validé">
+                            ✕
+                        </button>
+                        <button class="validation-btn btn-jaune ${validationState === 'jaune' ? 'btn-active' : ''}" 
+                                onclick="changeValidation('${competence.code}', 'jaune')" title="En cours">
+                            ⏳
+                        </button>
+                        <button class="validation-btn btn-vert ${validationState === 'vert' ? 'btn-active' : ''}" 
+                                onclick="changeValidation('${competence.code}', 'vert')" title="Validé">
+                            ✓
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Fonction pour afficher les compétences
+        function displayCompetences(competencesToShow = competencesData) {
+            const container = document.getElementById('competences-container');
+            container.innerHTML = competencesToShow.map(createCompetenceCard).join('');
+        }
+
+        // Fonction pour filtrer les compétences
+        function filterCompetences() {
+            const domainFilter = document.getElementById('domain-filter').value;
+            const validationFilter = document.getElementById('validation-filter').value;
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+
+            let filtered = competencesData.filter(comp => {
+                const matchesDomain = !domainFilter || comp.domain === domainFilter;
+                const matchesValidation = !validationFilter || validationStates[comp.code] === validationFilter;
+                const matchesSearch = !searchTerm ||
+                    comp.code.toLowerCase().includes(searchTerm) ||
+                    comp.title.toLowerCase().includes(searchTerm);
+
+                return matchesDomain && matchesValidation && matchesSearch;
+            });
+
+            displayCompetences(filtered);
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function () {
+            // Remplir le filtre des domaines
+            const domains = [...new Set(competencesData.map(comp => comp.domain))].sort();
+            const domainSelect = document.getElementById('domain-filter');
+            domains.forEach(domain => {
+                const option = document.createElement('option');
+                option.value = domain;
+                option.textContent = domain;
+                domainSelect.appendChild(option);
+            });
+
+            // Ajouter les écouteurs d'événements pour les filtres
+            document.getElementById('domain-filter').addEventListener('change', filterCompetences);
+            document.getElementById('validation-filter').addEventListener('change', filterCompetences);
+            document.getElementById('search-input').addEventListener('input', filterCompetences);
+
+            // Affichage initial
+            displayCompetences();
+            updateStats();
+        });
+    </script>
+</body>
+
+</html>
